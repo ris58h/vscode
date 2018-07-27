@@ -1172,7 +1172,6 @@ export class CheckForUpdatesAction extends Action {
 }
 
 export class ToggleAutoUpdateAction extends Action {
-
 	constructor(
 		id: string,
 		label: string,
@@ -1180,16 +1179,10 @@ export class ToggleAutoUpdateAction extends Action {
 		@IConfigurationService private configurationService: IConfigurationService
 	) {
 		super(id, label, '', true);
-		this.updateEnablement();
-		configurationService.onDidChangeConfiguration(() => this.updateEnablement());
-	}
-
-	private updateEnablement(): void {
-		this.enabled = this.configurationService.getValue(AutoUpdateConfigurationKey) !== this.autoUpdateValue;
 	}
 
 	run(): TPromise<any> {
-		return this.configurationService.updateValue(AutoUpdateConfigurationKey, this.autoUpdateValue);
+		return this.configurationService.updateValue(AutoUpdateConfigurationKey, this.autoUpdateValue ? 'checkAndInstall' : 'check');
 	}
 }
 

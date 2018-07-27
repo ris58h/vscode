@@ -411,7 +411,7 @@ export class ExtensionsWorkbenchService implements IExtensionsWorkbenchService, 
 
 		this.configurationService.onDidChangeConfiguration(e => {
 			if (e.affectsConfiguration(AutoUpdateConfigurationKey)) {
-				if (this.isAutoUpdateEnabled()) {
+				if (this.isSyncEnabled()) {
 					this.checkForUpdates();
 				}
 			}
@@ -607,11 +607,16 @@ export class ExtensionsWorkbenchService implements IExtensionsWorkbenchService, 
 	}
 
 	private isAutoUpdateEnabled(): boolean {
-		return this.configurationService.getValue(AutoUpdateConfigurationKey);
+		const configValue = this.configurationService.getValue(AutoUpdateConfigurationKey);
+		return configValue === true || configValue === 'checkAndInstall';
+	}
+
+	private isSyncEnabled(): boolean {
+		return this.configurationService.getValue(AutoUpdateConfigurationKey) !== 'off';
 	}
 
 	private eventuallySyncWithGallery(immediate = false): void {
-		const loop = () => this.syncWithGallery().then(() => this.eventuallySyncWithGallery());
+		const loop = () => (this.isSyncEnabled() ? this.syncWithGallery() : TPromise.as(null)).then(() => this.eventuallySyncWithGallery());
 		const delay = immediate ? 0 : ExtensionsWorkbenchService.SyncPeriod;
 
 		this.syncDelayer.trigger(loop, delay)

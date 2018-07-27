@@ -100,7 +100,7 @@ export const ShowRecommendationsOnlyOnDemandKey = 'extensions.showRecommendation
 export const CloseExtensionDetailsOnViewChangeKey = 'extensions.closeExtensionDetailsOnViewChange';
 
 export interface IExtensionsConfiguration {
-	autoUpdate: boolean;
+	autoUpdate: string;
 	ignoreRecommendations: boolean;
 	showRecommendationsOnlyOnDemand: boolean;
 	closeExtensionDetailsOnViewChange: boolean;
